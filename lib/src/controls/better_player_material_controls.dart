@@ -100,6 +100,16 @@ class _BetterPlayerMaterialControlsState
               Center(child: _buildLoadingWidget())
             else
               _buildHitArea(),
+            _betterPlayerController!.isHidechart
+                ? Positioned(
+                right: 40,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  color: Colors.transparent,
+                  child: _controlsConfiguration.customControlschat,
+                ))
+                : SizedBox(),
             Positioned(
               top: 0,
               left: 0,
