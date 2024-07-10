@@ -315,7 +315,11 @@ class _BetterPlayerVideoFitWidgetState
                   height: controller!.value.size?.height ?? 0,
                   child: VideoPlayer(controller),
                 ),
-                (widget.betterPlayerController.isFullScreen && widget.betterPlayerController.isHidechart)? Container(width: controller!.value.size!.width* 0.4,):SizedBox()
+                (widget.betterPlayerController.isFullScreen&& widget.betterPlayerController.isHidechart)? AnimatedContainer(
+                  width:  widget.betterPlayerController.isHidechart?controller!.value.size!.width * 0.4 :0,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
+                ):SizedBox()
               ],),),
           ),
         ),

@@ -97,6 +97,8 @@ class BetterPlayerControlsConfiguration {
 
   final Widget customControlschat ;
 
+  final Widget chatVideo ;
+
   ///Parameter used to change theme of the player
   final BetterPlayerTheme? playerTheme;
 
@@ -209,6 +211,7 @@ class BetterPlayerControlsConfiguration {
     this.controlsHideTime = const Duration(milliseconds: 300),
     this.customControlsBuilder,
     this.customControlschat = const SizedBox() ,
+    this.chatVideo = const SizedBox() ,
     this.playerTheme,
     this.showControls = true,
     this.showControlsOnInitialize = true,
