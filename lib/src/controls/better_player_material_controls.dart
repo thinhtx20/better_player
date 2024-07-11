@@ -32,7 +32,7 @@ class BetterPlayerMaterialControls extends StatefulWidget {
 }
 
 class _BetterPlayerMaterialControlsState
-    extends BetterPlayerControlsState<BetterPlayerMaterialControls> {
+    extends BetterPlayerControlsState<BetterPlayerMaterialControls>  with SingleTickerProviderStateMixin {
   VideoPlayerValue? _latestValue;
   final marginSize = 5.0;
   double? _latestVolume;
@@ -44,6 +44,8 @@ class _BetterPlayerMaterialControlsState
   VideoPlayerController? _controller;
   BetterPlayerController? _betterPlayerController;
   StreamSubscription? _controlsVisibilityStreamSubscription;
+  late AnimationController _showChatController;
+  late Animation<Offset> _offsetAnimation;
 
   BetterPlayerControlsConfiguration get _controlsConfiguration =>
       widget.controlsConfiguration;
@@ -57,6 +59,21 @@ class _BetterPlayerMaterialControlsState
   @override
   BetterPlayerControlsConfiguration get betterPlayerControlsConfiguration =>
       _controlsConfiguration;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _showChatController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(2, 0.0), // Offscreen right
+      end: Offset.zero, // Onscreen
+    ).animate(CurvedAnimation(parent: _showChatController, curve: Curves.fastEaseInToSlowEaseOut));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,23 +117,21 @@ class _BetterPlayerMaterialControlsState
               Center(child: _buildLoadingWidget())
             else
               _buildHitArea(),
-            _betterPlayerController!.isHidechart
-                ? Positioned(
-                right: 40,
-                child: Container(
+            (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen) ? Positioned(right: 40,
+                child: Visibility(
+                    visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width * 0.25,
-                  color: Colors.transparent,
-                  child: _controlsConfiguration.customControlschat,
-                ))
-                : SizedBox(),
+                  color: Colors.transparent, child: _controlsConfiguration.customControlschat,
+                ),)
+                )) : SizedBox(),
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: _buildTopBar(),
             ),
-            Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
+            Positioned(bottom: 0, left: 0, right: 10, child: _buildBottomBar()),
             _buildNextVideoWidget(),
           ],
         ),
@@ -208,7 +223,7 @@ class _BetterPlayerMaterialControlsState
           width: double.infinity,
           child: Row(
             children: [
-              if (_controlsConfiguration.enableTittle) _buildTittle() else const SizedBox(),
+              if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle() else const SizedBox(),
             ],
           ),
         ),
@@ -350,15 +365,15 @@ class _BetterPlayerMaterialControlsState
     );
   }
 
-  GestureDetector _buildHidechat() {
-    return GestureDetector(
+  InkWell _buildHidechat() {
+    return InkWell(
         onTap: _onHide,
         child:AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
           child:Container(
             margin: EdgeInsets.only(
-              right: _betterPlayerController!.isHidechart ? 10: 20,
+              right: _betterPlayerController!.isHidechart ? 25: 20,
             ),
             child: Icon(
               _betterPlayerController!.isHidechart ?  _controlsConfiguration.showChatIcon: _controlsConfiguration.hideChatIcon,
@@ -767,27 +782,61 @@ class _BetterPlayerMaterialControlsState
   }
 
   void _onHide() {
-    _betterPlayerController!.toggleHideChat();
+    if(_betterPlayerController!.isHidechart) {
+      _showChatController.reverse().then((_) {
+        _betterPlayerController!.toggleHideChat();
+      });
+
+    }
+    else {
+      _betterPlayerController!.toggleHideChat();
+      _showChatController.forward();
+    }
   }
 
   Widget _buildProgressBar() {
     return  Expanded(
-      child: AnimatedOpacity(
-          opacity: controlsNotVisible ? 0.0 : 1.0,
-          duration: _controlsConfiguration.controlsHideTime,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[600],
-                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        child: InkWell(
+          onTap: (){
+            showModalBottomSheet<void>(
+              isScrollControlled: true,
+              context: context,
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
               ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0)),
+              ),
+              builder: (BuildContext context) {
+                return Padding(
+                    padding: MediaQuery
+                        .of(context)
+                        .viewInsets,
+                    child: SafeArea(child: _controlsConfiguration.chatVideo,));
+              },
+            );
+          },
+          child: AnimatedOpacity(
+              opacity: controlsNotVisible ? 0.0 : 1.0,
+              duration: _controlsConfiguration.controlsHideTime,
               child: Padding(
-                padding: EdgeInsets.all(6),
-                child: Text('${_controlsConfiguration.textHint}',style: TextStyle(color: Colors.grey[200],fontSize: 10),maxLines: 1,),
-              ),
-            ),
-          )),
+                padding: const EdgeInsets.only(right: 12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[600],
+                    borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(6),
+                    child: Text('${_controlsConfiguration.textHint}',style: TextStyle(color: Colors.grey[200],fontSize: 10),maxLines: 1,),
+                  ),
+                ),
+              )),)
     );
   }
 

@@ -221,7 +221,7 @@ class _BetterPlayerVideoFitWidget extends StatefulWidget {
 }
 
 class _BetterPlayerVideoFitWidgetState
-    extends State<_BetterPlayerVideoFitWidget> {
+    extends State<_BetterPlayerVideoFitWidget> with SingleTickerProviderStateMixin{
   VideoPlayerController? get controller =>
       widget.betterPlayerController.videoPlayerController;
 
@@ -233,9 +233,22 @@ class _BetterPlayerVideoFitWidgetState
 
   StreamSubscription? _controllerEventSubscription;
 
+
+  late AnimationController _showChatController;
+  late Animation<Offset> _offsetAnimation;
+
   @override
   void initState() {
     super.initState();
+    _showChatController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(2, 0.0), // Offscreen right
+      end: Offset.zero, // Onscreen
+    ).animate(CurvedAnimation(parent: _showChatController, curve: Curves.fastEaseInToSlowEaseOut));
+
     if (!widget.betterPlayerController.betterPlayerConfiguration
         .showPlaceholderUntilPlay) {
       _started = true;
@@ -315,10 +328,10 @@ class _BetterPlayerVideoFitWidgetState
                   height: controller!.value.size?.height ?? 0,
                   child: VideoPlayer(controller),
                 ),
-                (widget.betterPlayerController.isFullScreen&& widget.betterPlayerController.isHidechart)? AnimatedContainer(
-                  width:  widget.betterPlayerController.isHidechart?controller!.value.size!.width * 0.4 :0,
-                  duration: const Duration(seconds: 2),
-                  curve: Curves.fastOutSlowIn,
+                (widget.betterPlayerController.isFullScreen&& widget.betterPlayerController.isHidechart)?
+                Visibility(
+                    visible: widget.betterPlayerController.isHidechart,
+                    child: SlideTransition(position: _offsetAnimation,child: Container( width: controller!.value.size!.width * 0.4 ),)
                 ):SizedBox()
               ],),),
           ),
