@@ -768,13 +768,17 @@ class _BetterPlayerMaterialControlsState
   }
 
   void _backtittle() {
-    changePlayerControlsNotVisible(true);
-    _betterPlayerController!.toggleFullScreen();
-    _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
-      setState(() {
-        cancelAndRestartTimer();
+    if (_betterPlayerController!.isFullScreen) {
+      changePlayerControlsNotVisible(true);
+      _betterPlayerController!.toggleFullScreen();
+      _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
+        setState(() {
+          cancelAndRestartTimer();
+        });
       });
-    });
+    } else {
+      Navigator.of(context, rootNavigator: false).pop();
+    }
   }
 
   void _onHide() {
