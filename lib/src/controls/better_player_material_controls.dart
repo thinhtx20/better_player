@@ -131,7 +131,7 @@ class _BetterPlayerMaterialControlsState
               right: 0,
               child: _buildTopBar(),
             ),
-            Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10: 5, child: _buildBottomBar()),
+            Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10 :0, child: _buildBottomBar()),
             _buildNextVideoWidget(),
           ],
         ),
@@ -373,12 +373,12 @@ class _BetterPlayerMaterialControlsState
           duration: _controlsConfiguration.controlsHideTime,
           child:Container(
             margin: EdgeInsets.only(
-              right: _betterPlayerController!.isHidechart ? 25: 20,
+              right: 40,
             ),
             child: Icon(
               _betterPlayerController!.isHidechart ?  _controlsConfiguration.showChatIcon: _controlsConfiguration.hideChatIcon,
-              color: _controlsConfiguration.textColor,
-              size: 20,
+              color:Colors.grey[600],
+              size: 40,
             ),),
         ));
   }
@@ -771,6 +771,7 @@ class _BetterPlayerMaterialControlsState
     if (_betterPlayerController!.isFullScreen) {
       changePlayerControlsNotVisible(true);
       _betterPlayerController!.toggleFullScreen();
+      _betterPlayerController!.toggleHideChat();
       _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
         setState(() {
           cancelAndRestartTimer();
@@ -786,7 +787,6 @@ class _BetterPlayerMaterialControlsState
       _showChatController.reverse().then((_) {
         _betterPlayerController!.toggleHideChat();
       });
-
     }
     else {
       _betterPlayerController!.toggleHideChat();

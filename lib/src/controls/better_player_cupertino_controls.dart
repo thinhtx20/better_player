@@ -297,8 +297,8 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
             ),
             child: Icon(
               _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon : _controlsConfiguration.hideChatIcon,
-              color: iconColor,
-              size: iconSize,
+              color: Colors.grey[500],
+              size: 40,
             ),),
         ));
   }
@@ -699,12 +699,12 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     if (_betterPlayerController!.isFullScreen) {
       changePlayerControlsNotVisible(true);
       _betterPlayerController!.toggleFullScreen();
+      _betterPlayerController!.toggleHideChat();
       _expandCollapseTimer = Timer(_controlsConfiguration.controlsHideTime, () {
         setState(() {
           cancelAndRestartTimer();
         });
       });
-      Navigator.of(context, rootNavigator: false).pop();
     } else {
       Navigator.of(context, rootNavigator: false).pop();
     }
