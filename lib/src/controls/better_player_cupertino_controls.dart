@@ -696,17 +696,13 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
   }
 
   void _backtittle() {
-    if (betterPlayerController!.isFullScreen) {
-      changePlayerControlsNotVisible(true);
-      _betterPlayerController!.toggleFullScreen();
-      _expandCollapseTimer = Timer(_controlsConfiguration.controlsHideTime, () {
-        setState(() {
-          cancelAndRestartTimer();
-        });
+    changePlayerControlsNotVisible(true);
+    _betterPlayerController!.toggleFullScreen();
+    _expandCollapseTimer = Timer(_controlsConfiguration.controlsHideTime, () {
+      setState(() {
+        cancelAndRestartTimer();
       });
-    } else {
-      Navigator.of(context, rootNavigator: false).pop();
-    }
+    });
   }
 
   Widget _buildProgressBar() {

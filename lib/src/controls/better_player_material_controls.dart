@@ -131,7 +131,7 @@ class _BetterPlayerMaterialControlsState
               right: 0,
               child: _buildTopBar(),
             ),
-            Positioned(bottom: 0, left: 0, right: 10, child: _buildBottomBar()),
+            Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10: 5, child: _buildBottomBar()),
             _buildNextVideoWidget(),
           ],
         ),
@@ -768,17 +768,13 @@ class _BetterPlayerMaterialControlsState
   }
 
   void _backtittle() {
-    if (betterPlayerController!.isFullScreen) {
-      changePlayerControlsNotVisible(true);
-      _betterPlayerController!.toggleFullScreen();
-      _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
-        setState(() {
-          cancelAndRestartTimer();
-        });
+    changePlayerControlsNotVisible(true);
+    _betterPlayerController!.toggleFullScreen();
+    _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
+      setState(() {
+        cancelAndRestartTimer();
       });
-    } else {
-      Navigator.of(context, rootNavigator: false).pop();
-    }
+    });
   }
 
   void _onHide() {
