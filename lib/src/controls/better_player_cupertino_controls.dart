@@ -699,7 +699,6 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     if (_betterPlayerController!.isFullScreen) {
       changePlayerControlsNotVisible(true);
       _betterPlayerController!.toggleFullScreen();
-      _betterPlayerController!.toggleHideChat();
       _expandCollapseTimer = Timer(_controlsConfiguration.controlsHideTime, () {
         setState(() {
           cancelAndRestartTimer();

@@ -771,7 +771,6 @@ class _BetterPlayerMaterialControlsState
     if (_betterPlayerController!.isFullScreen) {
       changePlayerControlsNotVisible(true);
       _betterPlayerController!.toggleFullScreen();
-      _betterPlayerController!.toggleHideChat();
       _hideTimer = Timer(_controlsConfiguration.controlsHideTime, () {
         setState(() {
           cancelAndRestartTimer();
