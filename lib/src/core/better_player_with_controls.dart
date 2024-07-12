@@ -322,18 +322,11 @@ class _BetterPlayerVideoFitWidgetState
             height: double.infinity,
             child: FittedBox(
               fit: widget.boxFit,
-              child:Row(children: [
-                SizedBox(
-                  width: controller!.value.size?.width ?? 0,
-                  height: controller!.value.size?.height ?? 0,
-                  child: VideoPlayer(controller),
-                ),
-                (widget.betterPlayerController.isFullScreen&& widget.betterPlayerController.isHidechart)?
-                Visibility(
-                    visible: widget.betterPlayerController.isHidechart,
-                    child: SlideTransition(position: _offsetAnimation,child: Container( width: controller!.value.size!.width * 0.4 ),)
-                ):SizedBox()
-              ],),),
+              child: SizedBox(
+                width: controller!.value.size?.width ?? 0,
+                height: controller!.value.size?.height ?? 0,
+                child: VideoPlayer(controller),
+              ),),
           ),
         ),
       );
