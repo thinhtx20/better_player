@@ -312,6 +312,7 @@ class _BetterPlayerVideoFitWidgetState
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
     if (_initialized && _started) {
