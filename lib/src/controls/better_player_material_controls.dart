@@ -375,11 +375,7 @@ class _BetterPlayerMaterialControlsState
             margin: EdgeInsets.only(
               right: 40,
             ),
-            child: Icon(
-              _betterPlayerController!.isHidechart ?  _controlsConfiguration.showChatIcon: _controlsConfiguration.hideChatIcon,
-              color:Colors.grey[600],
-              size: 40,
-            ),),
+            child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon,),
         ));
   }
 

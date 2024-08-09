@@ -48,9 +48,9 @@ class BetterPlayerControlsConfiguration {
 
   final IconData eyeWatchingIcon;
 
-  final IconData hideChatIcon;
+  final Widget hideChatIcon;
 
-  final IconData showChatIcon;
+  final Widget showChatIcon;
 
   ///Cupertino only icon, icon of forward
   final IconData skipForwardIcon;
@@ -241,8 +241,8 @@ class BetterPlayerControlsConfiguration {
     this.textColortitle = Colors.black,
     this.textTitle = '',
     this.backIcon = Icons.arrow_back_ios_outlined,
-    this.hideChatIcon = Icons.hide_image,
-    this.showChatIcon = Icons.image,
+    this.hideChatIcon = const SizedBox(),
+    this.showChatIcon = const SizedBox(),
     this.numberWatching = '',
     this.textHint = '',
     this.eyeWatchingIcon = Icons.remove_red_eye

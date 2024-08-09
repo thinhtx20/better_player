@@ -291,16 +291,8 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
         child: AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
-          child: Container(
-            margin: EdgeInsets.only(
-              right: _betterPlayerController!.isHidechart ? 25 : 20,
-            ),
-            child: Icon(
-              _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon : _controlsConfiguration.hideChatIcon,
-              color: Colors.grey[500],
-              size: 40,
-            ),),
-        ));
+          child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon),
+        );
   }
 
   Expanded _buildHitArea() {
