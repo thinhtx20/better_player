@@ -117,14 +117,6 @@ class _BetterPlayerMaterialControlsState
               Center(child: _buildLoadingWidget())
             else
               _buildHitArea(),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: _buildTopBar(),
-            ),
-            Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10 :0, child: _buildBottomBar()),
-            _buildNextVideoWidget(),
             (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen) ? Positioned(right: 40,
                 child: Visibility(
                     visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
@@ -133,6 +125,14 @@ class _BetterPlayerMaterialControlsState
                   color: Colors.transparent, child: _controlsConfiguration.customControlschat,
                 ),)
                 )) : SizedBox(),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildTopBar(),
+            ),
+            Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10 :0, child: _buildBottomBar()),
+            _buildNextVideoWidget(),
           ],
         ),
       ),
@@ -371,7 +371,11 @@ class _BetterPlayerMaterialControlsState
         child:AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
-          child:_betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon,
+          child:Container(
+            margin: EdgeInsets.only(
+              right: 40,
+            ),
+            child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon,),
         ));
   }
 

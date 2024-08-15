@@ -133,7 +133,6 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
         }
       },
       child: isFullScreen ? Stack(children: [
-        AbsorbPointer(absorbing: controlsNotVisible, child: controlsColumn),
         (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen)?
         Positioned(right: 40,
             child: Visibility(
@@ -143,6 +142,7 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
               color: Colors.transparent, child: _controlsConfiguration.customControlschat,
             ),)
             )) : SizedBox(),
+        AbsorbPointer(absorbing: controlsNotVisible, child: controlsColumn),
       ]) : controlsColumn,
     );
   }
@@ -287,12 +287,12 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
       double iconSize,
       double buttonPadding,) {
     return InkWell(
-      onTap: _onHide,
-      child: AnimatedOpacity(
+        onTap: _onHide,
+        child: AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
           child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon),
-    );
+        );
   }
 
   Expanded _buildHitArea() {
