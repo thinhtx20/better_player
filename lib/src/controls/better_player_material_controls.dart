@@ -117,14 +117,6 @@ class _BetterPlayerMaterialControlsState
               Center(child: _buildLoadingWidget())
             else
               _buildHitArea(),
-            (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen) ? Positioned(right: 40,
-                child: Visibility(
-                    visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  color: Colors.transparent, child: _controlsConfiguration.customControlschat,
-                ),)
-                )) : SizedBox(),
             Positioned(
               top: 0,
               left: 0,
@@ -133,6 +125,14 @@ class _BetterPlayerMaterialControlsState
             ),
             Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10 :0, child: _buildBottomBar()),
             _buildNextVideoWidget(),
+            (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen) ? Positioned(right: 40,
+                child: Visibility(
+                    visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  color: Colors.transparent, child: _controlsConfiguration.customControlschat,
+                ),)
+                )) : SizedBox(),
           ],
         ),
       ),
@@ -371,11 +371,7 @@ class _BetterPlayerMaterialControlsState
         child:AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
-          child:Container(
-            margin: EdgeInsets.only(
-              right: 40,
-            ),
-            child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon,),
+          child:_betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon,
         ));
   }
 
