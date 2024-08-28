@@ -30,6 +30,7 @@ class BetterPlayerCupertinoControls extends StatefulWidget {
 }
 
 class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<BetterPlayerCupertinoControls> with SingleTickerProviderStateMixin {
+  // ios
   final marginSize = 5.0;
   VideoPlayerValue? _latestValue;
   double? _latestVolume;
@@ -139,10 +140,10 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
                 visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width * 0.25,
-              color: Colors.transparent, child: _controlsConfiguration.customControlschat,
+              color: Colors.transparent, child: AbsorbPointer(absorbing: false ,child:_controlsConfiguration.customControlschat),
             ),)
             )) : SizedBox(),
-        AbsorbPointer(absorbing: controlsNotVisible, child: controlsColumn),
+        AbsorbPointer(absorbing: false, child: controlsColumn),
       ]) : controlsColumn,
     );
   }
@@ -287,12 +288,12 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
       double iconSize,
       double buttonPadding,) {
     return InkWell(
-        onTap: _onHide,
-        child: AnimatedOpacity(
+      onTap: _onHide,
+      child: AnimatedOpacity(
           opacity: controlsNotVisible ? 0.0 : 1.0,
           duration: _controlsConfiguration.controlsHideTime,
           child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon),
-        );
+    );
   }
 
   Expanded _buildHitArea() {
