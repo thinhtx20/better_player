@@ -133,18 +133,21 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
           BetterPlayerMultipleGestureDetector.of(context)!.onLongPress?.call();
         }
       },
-      child: isFullScreen ? Stack(children: [
-        (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen)?
-        Positioned(right: 40,
-            child: Visibility(
-                visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width * 0.25,
-              color: Colors.transparent, child: _controlsConfiguration.customControlschat,
-            ),)
-            )) : SizedBox(),
-        AbsorbPointer(absorbing: false, child: controlsColumn),
-      ]) : controlsColumn,
+      child: isFullScreen ? AbsorbPointer(
+        absorbing: false,
+        child: Stack(children: [
+          (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen)?
+          Positioned(right: 40,
+              child: Visibility(
+                  visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width * 0.25,
+                color: Colors.transparent, child: _controlsConfiguration.customControlschat,
+              ),)
+              )) : SizedBox(),
+          AbsorbPointer(absorbing: false, child: controlsColumn),
+        ]),
+      ) : controlsColumn,
     );
   }
 
