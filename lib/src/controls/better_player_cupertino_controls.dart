@@ -140,7 +140,7 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
                 visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width * 0.25,
-              color: Colors.transparent, child: AbsorbPointer(absorbing: false ,child:_controlsConfiguration.customControlschat),
+              color: Colors.transparent, child: _controlsConfiguration.customControlschat,
             ),)
             )) : SizedBox(),
         AbsorbPointer(absorbing: false, child: controlsColumn),
