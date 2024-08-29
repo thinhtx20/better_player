@@ -54,7 +54,6 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     ).animate(CurvedAnimation(parent: _showChatController, curve: Curves.fastEaseInToSlowEaseOut));
   }
 
-
   VideoPlayerController? _controller;
   BetterPlayerController? _betterPlayerController;
   StreamSubscription? _controlsVisibilityStreamSubscription;
@@ -90,65 +89,75 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     _controller = _betterPlayerController!.videoPlayerController;
     final backgroundColor = Colors.transparent;
     final iconColor = Colors.white;
-    final orientation = MediaQuery
-        .of(context)
-        .orientation;
+    final orientation = MediaQuery.of(context).orientation;
     final barHeight = orientation == Orientation.portrait ? _controlsConfiguration.controlBarHeight : _controlsConfiguration.controlBarHeight + 10;
     const buttonPadding = 14.0;
     final isFullScreen = _betterPlayerController?.isFullScreen == true;
 
     _wasLoading = isLoading(_latestValue);
-    final controlsColumn = Column(children: <Widget>[
-      _buildTopBar(
-        backgroundColor,
-        iconColor,
-        barHeight,
-        buttonPadding,
-      ),
-      if (_wasLoading) Expanded(child: Center(child: _buildLoadingWidget())) else
-        _buildHitArea(),
-      // _buildNextVideoWidget(),
-      _buildBottomBar(
-        backgroundColor,
-        iconColor,
-        barHeight,
-      ),
-    ]);
+
     return GestureDetector(
-      onTap: () {
-        if (BetterPlayerMultipleGestureDetector.of(context) != null) {
-          BetterPlayerMultipleGestureDetector.of(context)!.onTap?.call();
-        }
-        controlsNotVisible ? cancelAndRestartTimer() : changePlayerControlsNotVisible(true);
-      },
-      onDoubleTap: () {
-        if (BetterPlayerMultipleGestureDetector.of(context) != null) {
-          BetterPlayerMultipleGestureDetector.of(context)!.onDoubleTap?.call();
-        }
-        cancelAndRestartTimer();
-        _onPlayPause();
-      },
-      onLongPress: () {
-        if (BetterPlayerMultipleGestureDetector.of(context) != null) {
-          BetterPlayerMultipleGestureDetector.of(context)!.onLongPress?.call();
-        }
-      },
-      child: isFullScreen ? AbsorbPointer(
-        absorbing: false,
-        child: Stack(children: [
-          (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen)?
-          Positioned(right: 40,
-              child: Visibility(
-                  visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width * 0.25,
-                color: Colors.transparent, child: _controlsConfiguration.customControlschat,
-              ),)
-              )) : SizedBox(),
-          AbsorbPointer(absorbing: false, child: controlsColumn),
-        ]),
-      ) : controlsColumn,
-    );
+        onTap: () {
+          if (BetterPlayerMultipleGestureDetector.of(context) != null) {
+            BetterPlayerMultipleGestureDetector.of(context)!.onTap?.call();
+          }
+          controlsNotVisible ? cancelAndRestartTimer() : changePlayerControlsNotVisible(true);
+        },
+        onDoubleTap: () {
+          if (BetterPlayerMultipleGestureDetector.of(context) != null) {
+            BetterPlayerMultipleGestureDetector.of(context)!.onDoubleTap?.call();
+          }
+          cancelAndRestartTimer();
+          _onPlayPause();
+        },
+        onLongPress: () {
+          if (BetterPlayerMultipleGestureDetector.of(context) != null) {
+            BetterPlayerMultipleGestureDetector.of(context)!.onLongPress?.call();
+          }
+        },
+        child: AbsorbPointer(
+          absorbing: false,
+          child: Stack(fit: StackFit.expand, children: [
+            if (_wasLoading) Center(child: _buildLoadingWidget()) else _buildHitArea(),
+            (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen)
+                ? Positioned(
+                    right: 40,
+                    child: Visibility(
+                        visible: _betterPlayerController!.isHidechart,
+                        child: SlideTransition(
+                          position: _offsetAnimation,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            color: Colors.transparent,
+                            child: _controlsConfiguration.customControlschat,
+                          ),
+                        )))
+                : SizedBox(),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildTopBar(
+                backgroundColor,
+                iconColor,
+                barHeight,
+                buttonPadding,
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: _betterPlayerController!.isFullScreen ? 10 : 0,
+              child: _buildBottomBar(
+                backgroundColor,
+                iconColor,
+                barHeight,
+              ),
+            ),
+            // _buildNextVideoWidget(),
+          ]),
+        ));
   }
 
   @override
@@ -179,9 +188,11 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     super.didChangeDependencies();
   }
 
-  Widget _buildBottomBar(Color backgroundColor,
-      Color iconColor,
-      double barHeight,) {
+  Widget _buildBottomBar(
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+  ) {
     if (!betterPlayerController!.controlsEnabled) {
       return const SizedBox();
     }
@@ -197,49 +208,54 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
           ),
           child: _betterPlayerController!.isLiveStream()
               ? AnimatedOpacity(
-              opacity: controlsNotVisible ? 0.0 : 1.0,
-              duration: _controlsConfiguration.controlsHideTime,
-              onEnd: _onPlayerHide,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const SizedBox(width: 8),
-                  if (_controlsConfiguration.enablePlayPause) _buildPlayPause(_controller!, iconColor, barHeight) else
-                    const SizedBox(),
-                  const SizedBox(width: 8),
-                  _buildLiveWidget(),
-                ],
-              ))
+                  opacity: controlsNotVisible ? 0.0 : 1.0,
+                  duration: _controlsConfiguration.controlsHideTime,
+                  onEnd: _onPlayerHide,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const SizedBox(width: 8),
+                      if (_controlsConfiguration.enablePlayPause) _buildPlayPause(_controller!, iconColor, barHeight) else const SizedBox(),
+                      const SizedBox(width: 8),
+                      _buildLiveWidget(),
+                    ],
+                  ))
               : Row(
-            children: <Widget>[
-              if (_controlsConfiguration.enablePlayPause) _buildPlayPause(_controller!, iconColor, barHeight) else
-                const SizedBox(),
-              if (_controlsConfiguration.enableMute)_buildMuteButton(_controller, backgroundColor, iconColor, barHeight, 20, 10,) else
-                const SizedBox(),
-              if (_controlsConfiguration.enableProgressText) _buildPosition() else
-                const SizedBox(),
-              if (_controlsConfiguration.enableProgressBar && _betterPlayerController!.isFullScreen) _buildProgressBar() else
-                const SizedBox(),
-              // if (_controlsConfiguration.enableOverflowMenu) _buildRemaining() else const SizedBox(),
-              _betterPlayerController!.isFullScreen ? const SizedBox() : Spacer(),
-              if (_controlsConfiguration.enableFullscreen && !_betterPlayerController!.isFullScreen)
-                _buildExpandButton(
-                  backgroundColor,
-                  iconColor,
-                  barHeight,
-                  20,
-                  6,
-                )
-              else
-                _buildHidechat(
-                  backgroundColor,
-                  iconColor,
-                  barHeight,
-                  20,
-                  20,
+                  children: <Widget>[
+                    if (_controlsConfiguration.enablePlayPause) _buildPlayPause(_controller!, iconColor, barHeight) else const SizedBox(),
+                    if (_controlsConfiguration.enableMute)
+                      _buildMuteButton(
+                        _controller,
+                        backgroundColor,
+                        iconColor,
+                        barHeight,
+                        20,
+                        10,
+                      )
+                    else
+                      const SizedBox(),
+                    if (_controlsConfiguration.enableProgressText) _buildPosition() else const SizedBox(),
+                    if (_controlsConfiguration.enableProgressBar && _betterPlayerController!.isFullScreen) _buildProgressBar() else const SizedBox(),
+                    // if (_controlsConfiguration.enableOverflowMenu) _buildRemaining() else const SizedBox(),
+                    _betterPlayerController!.isFullScreen ? const SizedBox() : Spacer(),
+                    if (_controlsConfiguration.enableFullscreen && !_betterPlayerController!.isFullScreen)
+                      _buildExpandButton(
+                        backgroundColor,
+                        iconColor,
+                        barHeight,
+                        20,
+                        6,
+                      )
+                    else
+                      _buildHidechat(
+                        backgroundColor,
+                        iconColor,
+                        barHeight,
+                        20,
+                        20,
+                      ),
+                  ],
                 ),
-            ],
-          ),
         ),
       ),
     );
@@ -254,11 +270,13 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  GestureDetector _buildExpandButton(Color backgroundColor,
-      Color iconColor,
-      double barHeight,
-      double iconSize,
-      double buttonPadding,) {
+  GestureDetector _buildExpandButton(
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double iconSize,
+    double buttonPadding,
+  ) {
     return GestureDetector(
       onTap: _onExpandCollapse,
       child: AnimatedOpacity(
@@ -285,17 +303,16 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  InkWell _buildHidechat(Color backgroundColor,
-      Color iconColor,
-      double barHeight,
-      double iconSize,
-      double buttonPadding,) {
+  InkWell _buildHidechat(
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double iconSize,
+    double buttonPadding,
+  ) {
     return InkWell(
       onTap: _onHide,
-      child: AnimatedOpacity(
-          opacity: controlsNotVisible ? 0.0 : 1.0,
-          duration: _controlsConfiguration.controlsHideTime,
-          child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon :_controlsConfiguration.hideChatIcon),
+      child: AnimatedOpacity(opacity: controlsNotVisible ? 0.0 : 1.0, duration: _controlsConfiguration.controlsHideTime, child: _betterPlayerController!.isHidechart ? _controlsConfiguration.showChatIcon : _controlsConfiguration.hideChatIcon),
     );
   }
 
@@ -304,16 +321,17 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
       child: GestureDetector(
         onTap: _latestValue != null && _latestValue!.isPlaying
             ? () {
-          if (controlsNotVisible == true) {
-            cancelAndRestartTimer();
-          } else {
-            _hideTimer?.cancel();
-            changePlayerControlsNotVisible(true);
-          }
-        } : () {
-          _hideTimer?.cancel();
-          changePlayerControlsNotVisible(false);
-        },
+                if (controlsNotVisible == true) {
+                  cancelAndRestartTimer();
+                } else {
+                  _hideTimer?.cancel();
+                  changePlayerControlsNotVisible(true);
+                }
+              }
+            : () {
+                _hideTimer?.cancel();
+                changePlayerControlsNotVisible(false);
+              },
         child: Container(
           color: Colors.transparent,
         ),
@@ -321,12 +339,14 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  GestureDetector _buildMoreButton(VideoPlayerController? controller,
-      Color backgroundColor,
-      Color iconColor,
-      double barHeight,
-      double iconSize,
-      double buttonPadding,) {
+  GestureDetector _buildMoreButton(
+    VideoPlayerController? controller,
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double iconSize,
+    double buttonPadding,
+  ) {
     return GestureDetector(
       onTap: () {
         onShowMoreClicked();
@@ -357,12 +377,14 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  GestureDetector _buildMuteButton(VideoPlayerController? controller,
-      Color backgroundColor,
-      Color iconColor,
-      double barHeight,
-      double iconSize,
-      double buttonPadding,) {
+  GestureDetector _buildMuteButton(
+    VideoPlayerController? controller,
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double iconSize,
+    double buttonPadding,
+  ) {
     return GestureDetector(
       onTap: () {
         cancelAndRestartTimer();
@@ -400,9 +422,11 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  GestureDetector _buildPlayPause(VideoPlayerController controller,
-      Color iconColor,
-      double barHeight,) {
+  GestureDetector _buildPlayPause(
+    VideoPlayerController controller,
+    Color iconColor,
+    double barHeight,
+  ) {
     return GestureDetector(
       onTap: _onPlayPause,
       child: AnimatedOpacity(
@@ -453,20 +477,33 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
                         fontSize: 12.0,
                       ),
                     ),
-                    SizedBox(width: 5,),
-                  ],),),
-              SizedBox(width: 5,),
-              Row(children: [
-                Icon(_controlsConfiguration.eyeWatchingIcon, color: _controlsConfiguration.textColor,),
-                SizedBox(width: 5,),
-                Text(
-                  '${_controlsConfiguration.numberWatching}',
-                  style: TextStyle(
+                    SizedBox(
+                      width: 5,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    _controlsConfiguration.eyeWatchingIcon,
                     color: _controlsConfiguration.textColor,
-                    fontSize: 12.0,
                   ),
-                )
-              ],),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    '${_controlsConfiguration.numberWatching}',
+                    style: TextStyle(
+                      color: _controlsConfiguration.textColor,
+                      fontSize: 12.0,
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ));
@@ -512,7 +549,6 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
         height: barHeight,
         color: Colors.transparent,
         margin: EdgeInsets.only(
-          top: marginSize,
           right: marginSize,
           left: marginSize,
         ),
@@ -552,10 +588,12 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  Widget _buildTopBar(Color backgroundColor,
-      Color iconColor,
-      double topBarHeight,
-      double buttonPadding,) {
+  Widget _buildTopBar(
+    Color backgroundColor,
+    Color iconColor,
+    double topBarHeight,
+    double buttonPadding,
+  ) {
     if (!betterPlayerController!.controlsEnabled) {
       return const SizedBox();
     }
@@ -569,14 +607,12 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
       child: Container(
         height: barHeight,
         margin: EdgeInsets.only(
-          top: _betterPlayerController!.isFullScreen ? 20 : marginSize,
           right: marginSize,
           left: marginSize,
         ),
         child: Row(
           children: <Widget>[
-            if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle(iconColor, barHeight) else
-              const SizedBox(),
+            if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle(iconColor, barHeight) else const SizedBox(),
             const Spacer(),
             // const SizedBox(
             //   width: 4,
@@ -679,13 +715,11 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
   }
 
   void _onHide() {
-    if(_betterPlayerController!.isHidechart) {
+    if (_betterPlayerController!.isHidechart) {
       _showChatController.reverse().then((_) {
         _betterPlayerController!.toggleHideChat();
       });
-
-    }
-    else {
+    } else {
       _betterPlayerController!.toggleHideChat();
       _showChatController.forward();
     }
@@ -713,22 +747,17 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
             isScrollControlled: true,
             context: context,
             constraints: BoxConstraints(
-              maxWidth: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              maxWidth: MediaQuery.of(context).size.width,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(0)),
             ),
             builder: (BuildContext context) {
               return Padding(
-                  padding: MediaQuery
-                      .of(context)
-                      .viewInsets,
-                  child: SafeArea(child: _controlsConfiguration.chatVideo,));
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: SafeArea(
+                    child: _controlsConfiguration.chatVideo,
+                  ));
             },
           );
         },
@@ -744,10 +773,15 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(6),
-                  child: Text('${_controlsConfiguration.textHint}', style: TextStyle(color: Colors.grey[200], fontSize: 10), maxLines: 1,),
+                  child: Text(
+                    '${_controlsConfiguration.textHint}',
+                    style: TextStyle(color: Colors.grey[200], fontSize: 10),
+                    maxLines: 1,
+                  ),
                 ),
               ),
-            )),),
+            )),
+      ),
     );
   }
 
@@ -813,7 +847,7 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
       return errorBuilder(context, _betterPlayerController!.videoPlayerController!.value.errorDescription);
     } else {
       final textStyle = TextStyle(color: _controlsConfiguration.textColor);
-      return  Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -852,11 +886,13 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  Widget _buildPipButton(Color backgroundColor,
-      Color iconColor,
-      double barHeight,
-      double iconSize,
-      double buttonPadding,) {
+  Widget _buildPipButton(
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double iconSize,
+    double buttonPadding,
+  ) {
     return FutureBuilder<bool>(
       future: _betterPlayerController!.isPictureInPictureSupported(),
       builder: (context, snapshot) {
