@@ -316,25 +316,23 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
     );
   }
 
-  Expanded _buildHitArea() {
-    return Expanded(
-      child: GestureDetector(
-        onTap: _latestValue != null && _latestValue!.isPlaying
-            ? () {
-                if (controlsNotVisible == true) {
-                  cancelAndRestartTimer();
-                } else {
-                  _hideTimer?.cancel();
-                  changePlayerControlsNotVisible(true);
-                }
-              }
-            : () {
+  GestureDetector _buildHitArea() {
+    return GestureDetector(
+      onTap: _latestValue != null && _latestValue!.isPlaying
+          ? () {
+              if (controlsNotVisible == true) {
+                cancelAndRestartTimer();
+              } else {
                 _hideTimer?.cancel();
-                changePlayerControlsNotVisible(false);
-              },
-        child: Container(
-          color: Colors.transparent,
-        ),
+                changePlayerControlsNotVisible(true);
+              }
+            }
+          : () {
+              _hideTimer?.cancel();
+              changePlayerControlsNotVisible(false);
+            },
+      child: Container(
+        color: Colors.transparent,
       ),
     );
   }
