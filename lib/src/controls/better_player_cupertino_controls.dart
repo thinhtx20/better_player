@@ -242,6 +242,16 @@ class _BetterPlayerCupertinoControlsState extends BetterPlayerControlsState<Bett
               if (_controlsConfiguration.enableProgressBar && _betterPlayerController!.isFullScreen) _buildProgressBar() else const SizedBox(),
               // if (_controlsConfiguration.enableOverflowMenu) _buildRemaining() else const SizedBox(),
               _betterPlayerController!.isFullScreen ? const SizedBox() : Spacer(),
+              if (_controlsConfiguration.enablePip)
+                _buildPipButton(
+                  backgroundColor,
+                  iconColor,
+                  barHeight,
+                  20,
+                  6,
+                )
+              else
+                const SizedBox(),
               if (_controlsConfiguration.enableFullscreen && !_betterPlayerController!.isFullScreen)
                 _buildExpandButton(
                   backgroundColor,

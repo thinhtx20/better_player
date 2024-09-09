@@ -232,12 +232,6 @@ class _BetterPlayerMaterialControlsState
           child: Row(
             children: [
               if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle() else _controlsConfiguration.titleVideo,
-              // Spacer(),
-              // if (_controlsConfiguration.enablePip)
-              //   _buildPipButtonWrapperWidget(
-              //       controlsNotVisible, _onPlayerHide)
-              // else
-              //   const SizedBox(),
             ],
           ),
         ),
@@ -264,10 +258,13 @@ class _BetterPlayerMaterialControlsState
               color: _controlsConfiguration.textColor,
               size: 20,
             ),
+            SizedBox(width: 4,),
             Text(
               '${_controlsConfiguration.textTitle}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(color: _controlsConfiguration.textColortitle),
-            )
+            ),
           ],
         ),
       ),
@@ -366,6 +363,11 @@ class _BetterPlayerMaterialControlsState
                       ? _buildProgressBar()
                       : const SizedBox(),
                   _betterPlayerController!.isFullScreen ?const SizedBox() : Spacer(),
+                  if (_controlsConfiguration.enablePip)
+                    _buildPipButtonWrapperWidget(
+                        controlsNotVisible, _onPlayerHide)
+                  else
+                    const SizedBox(),
                   if (_controlsConfiguration.enableFullscreen && !_betterPlayerController!.isFullScreen)
                     _buildExpandButton()
                   else
