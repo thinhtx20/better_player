@@ -52,6 +52,10 @@ class BetterPlayerControlsConfiguration {
 
   final Widget showChatIcon;
 
+  final Widget pipIcon;
+
+  final Widget titleVideo;
+
   ///Cupertino only icon, icon of forward
   final IconData skipForwardIcon;
 
@@ -212,6 +216,8 @@ class BetterPlayerControlsConfiguration {
     this.customControlsBuilder,
     this.customControlschat = const SizedBox() ,
     this.chatVideo = const SizedBox() ,
+    this.pipIcon = const SizedBox() ,
+    this.titleVideo = const SizedBox() ,
     this.playerTheme,
     this.showControls = true,
     this.showControlsOnInitialize = true,

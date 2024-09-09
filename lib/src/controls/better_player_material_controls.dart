@@ -61,7 +61,6 @@ class _BetterPlayerMaterialControlsState
       _controlsConfiguration;
 
 
-
   @override
   void initState() {
     super.initState();
@@ -84,6 +83,7 @@ class _BetterPlayerMaterialControlsState
   Widget _buildMainWidget() {
     _wasLoading = isLoading(_latestValue);
     if (_latestValue?.hasError == true) {
+      changePlayerControlsNotVisible(false);
       return Container(
         color: Colors.transparent,
         child: _buildErrorWidget(),
@@ -113,10 +113,7 @@ class _BetterPlayerMaterialControlsState
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (_wasLoading)
-              Center(child: _buildLoadingWidget())
-            else
-              _buildHitArea(),
+            _wasLoading?Center(child: _buildLoadingWidget()): _buildHitArea(),
             (_betterPlayerController!.isHidechart && _betterPlayerController!.isFullScreen) ? Positioned(right: 40,
                 child: Visibility(
                     visible: _betterPlayerController!.isHidechart, child: SlideTransition(position: _offsetAnimation, child: Container(
@@ -178,31 +175,42 @@ class _BetterPlayerMaterialControlsState
               .videoPlayerController!.value.errorDescription);
     } else {
       final textStyle = TextStyle(color: _controlsConfiguration.textColor);
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.warning,
-              color: _controlsConfiguration.iconsColor,
-              size: 42,
-            ),
-            Text(
-              _betterPlayerController!.translations.generalDefaultError,
-              style: textStyle,
-            ),
-            if (_controlsConfiguration.enableRetry)
-              TextButton(
-                onPressed: () {
-                  _betterPlayerController!.retryDataSource();
-                },
-                child: Text(
-                  _betterPlayerController!.translations.generalRetry,
-                  style: textStyle.copyWith(fontWeight: FontWeight.bold),
+      return Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.warning,
+                  color: _controlsConfiguration.iconsColor,
+                  size: 42,
                 ),
-              )
-          ],
-        ),
+                Text(
+                  _betterPlayerController!.translations.generalDefaultError,
+                  style: textStyle,
+                ),
+                if (_controlsConfiguration.enableRetry)
+                  TextButton(
+                    onPressed: () {
+                      _betterPlayerController!.retryDataSource();
+                    },
+                    child: Text(
+                      _betterPlayerController!.translations.generalRetry,
+                      style: textStyle.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  )
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildTopBar(),
+          ),
+          Positioned(bottom: 0, left: 0, right: _betterPlayerController!.isFullScreen? 10 :0, child: _buildBottomBar()),
+        ],
       );
     }
   }
@@ -223,7 +231,13 @@ class _BetterPlayerMaterialControlsState
           width: double.infinity,
           child: Row(
             children: [
-              if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle() else const SizedBox(),
+              if (_controlsConfiguration.enableTittle && _betterPlayerController!.isFullScreen) _buildTittle() else _controlsConfiguration.titleVideo,
+              // Spacer(),
+              // if (_controlsConfiguration.enablePip)
+              //   _buildPipButtonWrapperWidget(
+              //       controlsNotVisible, _onPlayerHide)
+              // else
+              //   const SizedBox(),
             ],
           ),
         ),

@@ -608,7 +608,6 @@ class BetterPlayerController {
     if (_isFullScreen) {
       _isHidechart = false;
       _postControllerEvent(BetterPlayerControllerEvent.showscreen);
-
       _postControllerEvent(BetterPlayerControllerEvent.openFullscreen);
     } else {
       _postControllerEvent(BetterPlayerControllerEvent.hideFullscreen);
